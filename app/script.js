@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import AppDescription from './AppDescription';
+// import AppDescription from './AppDescription';
 
 class App extends React.Component {
 
@@ -8,24 +8,34 @@ class App extends React.Component {
     super(props);
     this.state = {
       status: {
-        off: true,
-        work: false,
+        off: false,
+        work: true,
         rest: false,
       },
-      time: 0,
+      time: 69,
       timer: null
     }
   }
+
+
+  formatTime = (time) => {
+    console.log(time);
+    const rawMinutes = Math.floor((time % 3600) / 60);
+    const rawSeconds = (time % 3600) % 60;
+    const minutes = rawMinutes < 10 ? "0" + rawMinutes : rawMinutes;
+    const seconds = rawSeconds < 10 ? "0" + rawSeconds : rawSeconds;
+    return minutes + ':' + seconds;
+  }
+
 
   render() {
 
     const { status } = this.state;
     // console.log(status);
-
     return (
       <div>
         <h1>Protect your eyes</h1>
-        <AppDescription />
+        {/* <AppDescription /> */}
         {(status.off) &&
           <div>
             <p>According to optometrists in order to save your eyes, you should follow the 20/20/20. It means you should rest your eyes every 20 minutes for 20 seconds by looking more than 20 feet away.</p>
@@ -36,7 +46,7 @@ class App extends React.Component {
         {(status.rest) && <img src="./images/rest.png" />}
         {(!status.off) &&
           <div className="timer">
-            18:23
+            {this.formatTime(this.state.time)}
           </div>
         }
         {(status.off) && <button className="btn">Start</button>}
