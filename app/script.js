@@ -8,18 +8,18 @@ class App extends React.Component {
     super(props);
     this.state = {
       status: {
-        off: false,
-        work: true,
+        off: true,
+        work: false,
         rest: false,
       },
-      time: 69,
+      time: 0,
       timer: null
     }
   }
 
 
   formatTime = (time) => {
-    console.log(time);
+    // console.log(time);
     const rawMinutes = Math.floor((time % 3600) / 60);
     const rawSeconds = (time % 3600) % 60;
     const minutes = rawMinutes < 10 ? "0" + rawMinutes : rawMinutes;
@@ -27,6 +27,67 @@ class App extends React.Component {
     return minutes + ':' + seconds;
   }
 
+  step = () => {
+    // console.log('step is working');
+    this.setState({
+      time: this.state.time - 1,
+    });
+    if (this.state.time === 0) {
+      this.playBell();
+      if (this.state.status.work) {
+        this.setState({
+          status: {
+            off: false,
+            work: false,
+            rest: true,
+          },
+          time: 20,
+        })
+      } else if (this.state.status.rest) {
+        this.setState({
+          status: {
+            off: false,
+            work: true,
+            rest: false,
+          },
+          time: 1200,
+        })
+      }
+    }
+  }
+
+  startTimer = () => {
+    this.setState({
+      status: {
+        off: false,
+        work: true,
+        rest: false,
+      },
+      time: 1200,
+      timer: setInterval(this.step, 1000),
+    });
+  }
+
+  stopTimer = () => {
+    clearInterval(this.state.timer);
+    this.setState({
+      status: {
+        off: true,
+        work: false,
+        rest: false,
+      },
+      time: 0,
+    });
+  }
+
+  closeApp = () => {
+    window.close();
+  }
+
+  playBell = () => {
+    const bell = new Audio('./sounds/bell.wav');
+    bell.play();
+  }
 
   render() {
 
@@ -49,9 +110,9 @@ class App extends React.Component {
             {this.formatTime(this.state.time)}
           </div>
         }
-        {(status.off) && <button className="btn">Start</button>}
-        {(!status.off) && <button className="btn">Stop</button>}
-        <button className="btn btn-close">X</button>
+        {(status.off) && <button onClick={() => this.startTimer()} className="btn">Start</button>}
+        {(!status.off) && <button onClick={() => this.stopTimer()} className="btn">Stop</button>}
+        <button onClick={() => this.closeApp()} className="btn btn-close">X</button>
       </div>
     )
   }

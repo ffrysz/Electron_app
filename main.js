@@ -11,13 +11,14 @@ function main() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
-    width: 1200,
-    height: 1200,
+    width: 520,
+    height: 650,
+    frame: false,
   })
 
   // load app/index.html as the window content
   mainWindow.loadFile(path.join('app', 'index.html'));
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', main);
